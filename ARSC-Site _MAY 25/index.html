@@ -1397,6 +1397,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
     width: 100px;
     border-radius: 50%;
 }
+
+/* Zoom out only the MergerDomo team image */
+.card img.team-zoom-out {
+    transform: scale(0.85);
+    max-width: 90%;
+    margin: 0 auto;
+    display: block;
+}
 </style>
 
 <div style="text-align:center; max-width:1000px; margin:auto;">
@@ -1411,7 +1419,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 (function(){
 const TEAM = [
 {name:"Madhu Srivastava", role:["MD","Global Strategy", "Workforce Management (UKG WFM)"], img:"img/team-5.jpeg"},
-{name:"Manish Srivastava", role:["Cofounder & CEO","Business Strategy"], img:"img/team-1.jpg"},
+{name:"Manish Srivastava", role:["Cofounder & CEO","Business Strategy"], img:"img/Manish_dp.jpeg"},
 {name:"Rajneesh Srivastava", role:["Principal Consultant","Non-IT & Market Research"], img:"img/team-2.jpg"},
 {name:"Rajesh Verma", role:["Principal Consultant","IT Strategy","Software Engineering"], img:"img/team-4.jpg"},
 {name:"Manoj Pandey", role:["Principal Consultant","EdTech Ops"], img:"img/team-6.jpg"},
@@ -1430,8 +1438,10 @@ TEAM.forEach(member=>{
     const card = document.createElement("div");
     card.className = "card reveal";
 
+    const imageClass = member.name === "MergerDomo" ? "team-zoom-out" : "";
+
     card.innerHTML = `
-        <img src="${member.img}">
+        <img class="${imageClass}" src="${member.img}">
         <div class="content">
             <h4>${member.name}</h4>
             ${member.role.map(r=>`<p>${r}</p>`).join("")}
