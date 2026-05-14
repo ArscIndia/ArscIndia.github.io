@@ -1105,20 +1105,23 @@ textarea.form-control {
     <div class="form-card fade-up">
 
         <form id="contactForm">
+            <input type="hidden" name="_subject" value="New Quote Request">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
 
             <div class="mb-3">
                 <label class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="name">
+                <input type="text" class="form-control" id="name" name="name">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control" id="email" name="email">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Area of Interest</label>
-                <select class="form-select" id="interest">
+                <select class="form-select" id="interest" name="interest">
                     <option value="">Select an option</option>
                     <option>Strategic Consulting</option>
                     <option>Digital Transformation</option>
@@ -1129,7 +1132,7 @@ textarea.form-control {
 
             <div class="mb-3">
                 <label class="form-label">Message</label>
-                <textarea class="form-control" rows="4" id="message"></textarea>
+                <textarea class="form-control" rows="4" id="message" name="message"></textarea>
             </div>
 
             <button class="btn btn-submit w-100" id="submitBtn">
@@ -1138,6 +1141,9 @@ textarea.form-control {
 
             <div class="success-msg" id="successMsg">
                 ✓ Request submitted successfully
+            </div>
+            <div class="error-msg" id="errorMsg" style="display:none; color:#dc3545; font-size:13px; margin-top:10px;">
+                Submission failed. Please try again.
             </div>
 
         </form>
@@ -1231,27 +1237,53 @@ const validate = () => {
     return valid;
 };
 
+// ================= API ENDPOINT =================
+const API_ENDPOINT = "https://formspree.io/f/mpqbgznp"; // replace YOUR_FORM_ID with your Formspree form ID
+
 // ================= SUBMIT =================
-document.getElementById("contactForm").addEventListener("submit", function(e){
+document.getElementById("contactForm").addEventListener("submit", async function(e){
     e.preventDefault();
     if(!validate()) return;
 
     const btn = document.getElementById("submitBtn");
     const msg = document.getElementById("successMsg");
+    const errorMsg = document.getElementById("errorMsg");
 
     btn.innerText = "Submitting...";
     btn.disabled = true;
+    msg.style.display = "none";
+    errorMsg.style.display = "none";
 
-    setTimeout(()=>{
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.success === false) {
+            throw new Error(result.message || `HTTP ${response.status}`);
+        }
+
         btn.innerText = "Request Proposal";
         btn.disabled = false;
-
-        msg.style.display="block";
+        msg.textContent = "✓ Request submitted successfully";
+        msg.style.display = "block";
         this.reset();
 
-        setTimeout(()=> msg.style.display="none",3000);
-
-    },1000);
+        setTimeout(()=> msg.style.display = "none", 3000);
+    } catch (err) {
+        console.error("Quote submission failed", err);
+        btn.innerText = "Request Proposal";
+        btn.disabled = false;
+        errorMsg.textContent = "Submission failed. Please try again later.";
+        errorMsg.style.display = "block";
+    }
 });
 
 // ================= INIT =================
@@ -1261,7 +1293,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 </script>
     <!-- Quote End -->
-
 
    
 	<!-- Team Start -->
@@ -1460,6 +1491,20 @@ modal.onclick=()=>modal.classList.remove("active");
     <!-- Team End -->
 
 
+<div class="col-12 d-flex justify-content-center wow slideInUp" data-wow-delay="0.6s">
+    
+    <br>
+    <div style="width: 100%; max-width: 800px;">
+          <h5 style="color:#007bff; font-weight:bold; text-align:center;" class="title">Our Location</h5>
+    <br>
+        <iframe class="position-relative rounded w-100"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.297604515886!2d76.9524941!3d28.4050132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d3d8f86a31523%3A0x1ee819a2fe76357c!2sOrris%20Aster%20Court%20Premier%20Block-3k%2C%203K%2C%20Orris%20Aster%20Ct%2C%20Sector%2085%2C%20Gurugram%2C%20Haryana%20122012!5e0!3m2!1sen!2sbd!4v1701700000000!5m2!1sen!2sbd"
+            frameborder="0" style="min-height: 450px; border:0;" allowfullscreen="" aria-hidden="false"
+            tabindex="0"></iframe>
+          
+    </div>
+</div>
+
     <!-- Vendor Start -->
  
 <div id="client-carousel-section">
@@ -1633,12 +1678,9 @@ track.addEventListener("mouseleave", () => isPaused = false);
                                 <h4 class="text-light mb-0">Popular Links</h4>
                             </div>
                             <div class="link-animated d-flex flex-column justify-content-start">
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>About Us</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Industries Serve</a>                                
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Our Services</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
-                                <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
+                                <a class="text-light mb-2" href="index.html"><i class="bi bi-arrow-right text-primary me-2"></i>Home</a>
+                                <a class="text-light mb-2" href="quote.html"><i class="bi bi-arrow-right text-primary me-2"></i>Get A Quote</a>
+                                <a class="text-light mb-2" href="about.html"><i class="bi bi-arrow-right text-primary me-2"></i>Meet The Team</a>
                             </div>
                         </div>
                     </div>
